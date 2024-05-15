@@ -1,44 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Translate App</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Translate App</h1>
     <form id="translation-form">
-        <label for="input-text">Enter Text to Translate:</label><br>
-        <textarea id="input-text"  name="input-text" rows="4" cols="50"></textarea><br>
-        <button type="submit">Translate</button>
+      <label for="input-text">Enter Text to Translate:</label><br />
+      <textarea id="input-text" name="input-text" rows="4" cols="50"></textarea
+      ><br />
+      <label for="target-language">Select Target Language:</label>
+      <select id="target-language" name="target-language">
+        <option value="hi_IN">Hindi</option>
+        <option value="ar_AR">Arabic</option>
+        <option value="gu_IN">Gujarati</option>
+        <option value="mr_IN">Marathi</option></select
+      ><br />
+      <button type="submit">Translate</button>
     </form>
     <div id="translation-result"></div>
 
     <script>
-        document.getElementById('translation-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var inputText = document.getElementById('input-text').value;
-            translateText(inputText);
+      document
+        .getElementById("translation-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          var inputText = document.getElementById("input-text").value;
+          translateText(inputText);
+          var targetLanguage = document.getElementById("target-language").value;
+          translateText(inputText, targetLanguage);
         });
 
-        function translateText(text) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://127.0.0.1:5000/translate', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        document.getElementById('translation-result').innerText = response.translation;
-                    } else {
-                        console.error('Translation request failed with status:', xhr.status);
-                    }
-                }
-            };
-            var data = JSON.stringify({text: text});
-            xhr.send(data);
-        }
+      function translateText(text, targetLanguage) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://127.0.0.1:5000/translate", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              var response = JSON.parse(xhr.responseText);
+              document.getElementById("translation-result").innerText =
+                response.translation;
+            } else {
+              console.error(
+                "Translation request failed with status:",
+                xhr.status
+              );
+            }
+          }
+        };
+        var data = JSON.stringify({
+          text: text,
+          target_language: targetLanguage,
+        });
+        xhr.send(data);
+      }
     </script>
-</body>
+  </body>
 </html>
