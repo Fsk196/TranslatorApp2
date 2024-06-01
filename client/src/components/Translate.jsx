@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import Translation from "./Translation";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 const Translate = () => {
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
   const targetLanguage = "hi_IN";
+
+  useGSAP(() => {
+    gsap.from("#translateBtn", {
+      scrollTrigger: "#translation",
+      x: -100,
+      opacity: 0,
+      ease: "bounce",
+    });
+  }, []);
 
   const translateText = async () => {
     setIsTranslating(true);
@@ -46,9 +57,10 @@ const Translate = () => {
         {translatedText && <Translation lang="hindi" text={translatedText} />}
       </div>
       <button
+        id="translateBtn"
         onClick={translateText}
         disabled={isTranslating}
-        className="bg-[#0029FF] text-white text-lg px-4 py-2 rounded-md mt-4"
+        className="bg-[#0029FF] text-white opacity-1 text-lg px-4 py-2 rounded-md mt-4 hover:scale-105"
       >
         {isTranslating ? "Translating..." : "Translate"}
       </button>
